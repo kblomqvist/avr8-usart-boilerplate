@@ -42,15 +42,15 @@ static FILE usart_stream = FDEV_SETUP_STREAM(
 /*  Usart initiliazator */
 void usart_init()
 {
-	/*  Set baud rate using avr-libc helper macros */
-	UBRR0L = UBRRL_VALUE;
-	UBRR0H = UBRRH_VALUE;
-	
-	/*  Asynchronous USART, Parity = none, Stop bits = 1, Data bits = 8 */
-	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
-	
-	/*  Enable RX and TX */
-	UCSR0B = _BV(RXEN0) | _BV(TXEN0);
+    /*  Set baud rate using avr-libc helper macros */
+    UBRR0L = UBRRL_VALUE;
+    UBRR0H = UBRRH_VALUE;
+    
+    /*  Asynchronous USART, Parity = none, Stop bits = 1, Data bits = 8 */
+    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+    
+    /*  Enable RX and TX */
+    UCSR0B = _BV(RXEN0) | _BV(TXEN0);
 
     /*  Override general io pins for usart rx/tx */
     USART_PORT &= ~_BV(USART_RX);
@@ -72,35 +72,35 @@ void init(void)
 
     /*  Initialize usart and declare standard input and output streams */
     usart_init();
-	stdin = stdout = &usart_stream;
+    stdin = stdout = &usart_stream;
 }
 
 int main(void)
 {
     /*  Initialize */
-	init();
+    init();
 
     /*  Main loop */
     while (1) {
-		printf("Command >> ");
-		switch (getchar()) { // wait user input
-			case 'h':
-				printf("\r\n");
-				printf("s = Say \"Hello!\" in loop\r\n");
-				printf("h = Help\r\n");
-				break;
+        printf("Command >> ");
+        switch (getchar()) { // wait user input
+            case 'h':
+                printf("\r\n");
+                printf("s = Say \"Hello!\" in loop\r\n");
+                printf("h = Help\r\n");
+                break;
 
-			case 's':
-				for(;;) {
-					if (USART_ESCAPE) // break if ESC was pressed
-						break;
-					printf("\r\nHello! Press ESC to stop!");
-				}
-				break;
-			default:
-				printf("\r\nPress 'h' for help");
-		}
-		printf("\r\n");
-	}
+            case 's':
+                for(;;) {
+                    if (USART_ESCAPE) // break if ESC was pressed
+                        break;
+                    printf("\r\nHello! Press ESC to stop!");
+                }
+                break;
+            default:
+                printf("\r\nPress 'h' for help");
+        }
+        printf("\r\n");
+    }
 }
 
