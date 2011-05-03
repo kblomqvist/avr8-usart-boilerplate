@@ -91,12 +91,11 @@ int main(void)
                 break;
 
             case 's':
-                for(;;) {
-                    if (USART_ESCAPE) // break if ESC was pressed
-                        break;
+				do {
                     printf("\r\nHello! Press ESC to stop!");
-                }
+                } while (!USART_ESCAPE)
                 break;
+
             default:
                 printf("\r\nPress 'h' for help");
         }
