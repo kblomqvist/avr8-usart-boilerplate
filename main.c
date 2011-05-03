@@ -11,7 +11,7 @@
  * - 05/03/2011 Initial version
  *
  * @copyright Copyright (c) 2011 Kim Blomqvist
- * @license   Attribution 3.0 Unported (CC BY 3.0)
+ * @license   http://creativecommons.org/licenses/by/3.0/ (CC BY 3.0)
  */
 
 #include <stdlib.h>    // general utilities
