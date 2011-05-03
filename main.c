@@ -15,91 +15,91 @@
  */
 
 #include <stdlib.h>    // general utilities
-#include <stdio.h>     // standard io facilities
+#include <stdio.h>	   // standard io facilities
 #include <avr/io.h>    // avr device-specific io definitions
 #include <avr/power.h> // power reduction management
 #include "usart.h"
 
 #ifndef F_CPU
-    #error Define F_CPU (CPU frequency) in your makefile
+	#error Define F_CPU (CPU frequency) in your makefile
 #endif
 
-/*  Usart
+/*	Usart
  * ----------------------------------------------------------------------*/
-#define BAUD      19200   // baud rate, see <util/setbaud.h>
-#define BOUD_TOL  2       // baud tolerance 2%, see <util/setbaud.h>
-#define USE_2X    0       // don't use prescaler, see <util/setbaud.h>
+#define BAUD	  19200   // baud rate, see <util/setbaud.h>
+#define BOUD_TOL  2		  // baud tolerance 2%, see <util/setbaud.h>
+#define USE_2X	  0		  // don't use prescaler, see <util/setbaud.h>
 #include <util/setbaud.h> // helper macros for baud rate calculations
 
 #define USART_PORT DDRD   // usart port
 #define USART_RX   DDD0   // usart rx pin
 #define USART_TX   DDD1   // usart tx pin
 
-/*  Setup streams for communication via usart */
+/*	Setup streams for communication via usart */
 static FILE usart_stream = FDEV_SETUP_STREAM(
-    usart_putchar, usart_getchar, _FDEV_SETUP_RW);
+	usart_putchar, usart_getchar, _FDEV_SETUP_RW);
 
-/*  Usart initiliazator */
+/*	Usart initiliazator */
 void usart_init()
 {
-    /*  Set baud rate using avr-libc helper macros */
-    UBRR0L = UBRRL_VALUE;
-    UBRR0H = UBRRH_VALUE;
-    
-    /*  Asynchronous USART, Parity = none, Stop bits = 1, Data bits = 8 */
-    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
-    
-    /*  Enable RX and TX */
-    UCSR0B = _BV(RXEN0) | _BV(TXEN0);
+	/*	Set baud rate using avr-libc helper macros */
+	UBRR0L = UBRRL_VALUE;
+	UBRR0H = UBRRH_VALUE;
+	
+	/*	Asynchronous USART, Parity = none, Stop bits = 1, Data bits = 8 */
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+	
+	/*	Enable RX and TX */
+	UCSR0B = _BV(RXEN0) | _BV(TXEN0);
 
-    /*  Override general io pins for usart rx/tx */
-    USART_PORT &= ~_BV(USART_RX);
-    USART_PORT |= _BV(USART_TX);
+	/*	Override general io pins for usart rx/tx */
+	USART_PORT &= ~_BV(USART_RX);
+	USART_PORT |= _BV(USART_TX);
 }
 
-/*  Main
+/*	Main
  * ----------------------------------------------------------------------*/
 void init(void)
 {
-    /*  Initialize general io pins */
+	/*	Initialize general io pins */
 
-    // @todo It's always a good idea to specifically setup io pin states
-    // before doing anything special, but i'm feeling lazy with this
+	// @todo It's always a good idea to specifically setup io pin states
+	// before doing anything special, but i'm feeling lazy with this
 
-    /*  Make sure that usart module is powered up. Note that modules has to be
-     *  reinitialized if powered down. */
-    power_usart0_enable();
+	/*	Make sure that usart module is powered up. Note that modules has to be
+	 *	reinitialized if powered down. */
+	power_usart0_enable();
 
-    /*  Initialize usart and declare standard input and output streams */
-    usart_init();
-    stdin = stdout = &usart_stream;
+	/*	Initialize usart and declare standard input and output streams */
+	usart_init();
+	stdin = stdout = &usart_stream;
 }
 
 int main(void)
 {
-    /*  Initialize */
-    init();
+	/*	Initialize */
+	init();
 
-    /*  Main loop */
-    while (1) {
-        printf("Command >> ");
-        switch (getchar()) { // wait user input
-            case 'h':
-                printf("\r\n");
-                printf("s = Say \"Hello!\" in loop\r\n");
-                printf("h = Help\r\n");
-                break;
+	/*	Main loop */
+	while (1) {
+		printf("Command >> ");
+		switch (getchar()) { // wait user input
+			case 'h':
+				printf("\r\n");
+				printf("s = Say \"Hello!\" in loop\r\n");
+				printf("h = Help\r\n");
+				break;
 
-            case 's':
+			case 's':
 				do {
-                    printf("\r\nHello! Press ESC to stop!");
-                } while (!USART_ESCAPE)
-                break;
+					printf("\r\nHello! Press ESC to stop!");
+				} while (!USART_ESCAPE)
+				break;
 
-            default:
-                printf("\r\nPress 'h' for help");
-        }
-        printf("\r\n");
-    }
+			default:
+				printf("\r\nPress 'h' for help");
+		}
+		printf("\r\n");
+	}
 }
 
