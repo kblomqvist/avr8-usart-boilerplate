@@ -21,7 +21,7 @@
 #include "usart.h"
 
 #ifndef F_CPU
-    #warning Define F_CPU (CPU frequency) in your makefile
+    #error Define F_CPU (CPU frequency) in your makefile
 #endif
 
 /*  Usart
