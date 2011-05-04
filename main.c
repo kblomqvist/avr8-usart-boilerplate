@@ -18,7 +18,7 @@
 #include <stdio.h>     // standard io facilities
 #include <avr/io.h>    // avr device-specific io definitions
 #include <avr/power.h> // power reduction management
-#include "usart.h"
+#include "usart0.h"
 
 #ifndef F_CPU
     #error Define F_CPU (CPU frequency) in your makefile
@@ -37,10 +37,10 @@
 
 /*  Setup streams for communication via usart */
 static FILE usart_stream = FDEV_SETUP_STREAM(
-    usart_putchar, usart_getchar, _FDEV_SETUP_RW);
+    usart0_putchar, usart0_getchar, _FDEV_SETUP_RW);
 
 /*  Usart initiliazator */
-void usart_init()
+void usart0_init(void)
 {
     /*  Set baud rate using avr-libc helper macros */
     UBRR0L = UBRRL_VALUE;
@@ -71,7 +71,7 @@ void init(void)
     power_usart0_enable();
 
     /*  Initialize usart and declare standard input and output streams */
-    usart_init();
+    usart0_init();
     stdin = stdout = &usart_stream;
 }
 
@@ -93,7 +93,7 @@ int main(void)
             case 's':
                 do {
                     printf("\r\nHello! Press ESC to stop!");
-                } while (!USART_ESCAPE)
+                } while (!USART0_ESCAPE);
                 break;
 
             default:

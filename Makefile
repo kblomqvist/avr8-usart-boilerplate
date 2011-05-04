@@ -53,7 +53,7 @@ TARGET = main
 OBJDIR = .
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c usart.c
+SRC = $(TARGET).c usart0.c
 
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = 

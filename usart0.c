@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <avr/io.h>
-#include "usart.h"
+#include "usart0.h"
 
-int usart_putchar(char c, FILE *stream) {
+int usart0_putchar(char c, FILE *stream) {
     while(!(UCSR0A & (1 << UDRE0)));
     UDR0 = c;
     return 0;
 }
 
-uint8_t usart_getchar(FILE *stream) {
-    while(!USART_DATARECEIVED);
+int usart0_getchar(FILE *stream) {
+    while(!USART0_DATARECEIVED);
     return UDR0;
 }
 
